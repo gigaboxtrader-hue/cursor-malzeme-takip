@@ -28,15 +28,25 @@ def main() -> None:
     configure_logging()
     logging.info("Starting Malzeme Takip Sistemi")
 
-    # Import UI lazily to avoid initializing Tk in non-GUI contexts (e.g., tests)
-    try:
-        from malzeme.ui import MalzemeApp
-    except Exception as exc:  # pragma: no cover - startup guard
-        logging.exception("UI module import failed: %s", exc)
-        raise
+    # Auto-detect headless (e.g., Colab) to run Web UI instead of Tk
+    headless = not bool(os.environ.get("DISPLAY")) or os.environ.get("COLAB_GPU") is not None or os.environ.get("COLAB_RELEASE_TAG") is not None
+    if headless:
+        logging.info("Headless environment detected. Launching Web UI (Gradio)")
+        from malzeme.web import MalzemeWebApp
 
-    app = MalzemeApp()
-    app.run()
+        web_app = MalzemeWebApp()
+        # In Colab, share=True opens a public URL; if running locally, you can set share=False
+        web_app.run(share=True)
+    else:
+        # Import UI lazily to avoid initializing Tk in non-GUI contexts (e.g., tests)
+        try:
+            from malzeme.ui import MalzemeApp
+        except Exception as exc:  # pragma: no cover - startup guard
+            logging.exception("UI module import failed: %s", exc)
+            raise
+
+        app = MalzemeApp()
+        app.run()
 
 
 if __name__ == "__main__":
