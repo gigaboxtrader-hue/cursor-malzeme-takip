@@ -1,11 +1,9 @@
+.venv/
 __pycache__/
 *.pyc
-.pytest_cache/
-.mypy_cache/
-.venv/
-venv/
-logs/
-data.json
-settings.json
-*.xlsx
+.env
+.cache/
+/data/
+*.parquet
 *.csv
+.ipynb_checkpoints/

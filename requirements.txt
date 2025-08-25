@@ -1,5 +1,5 @@
-tk
-pandas>=2.0.0
-openpyxl>=3.1.0
-pyperclip>=1.8.2
-gradio>=4.0.0
+requests==2.32.3
+tenacity==8.4.2
+python-dateutil==2.9.0.post0
+pytz==2024.1
+typing-extensions==4.12.2

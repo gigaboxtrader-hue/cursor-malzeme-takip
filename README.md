@@ -1,40 +1,27 @@
-## Malzeme Takip Sistemi
+## Quant Futures System (Binance USDT-M)
 
-Modern, modüler ve genişletilebilir bir masaüstü uygulaması. Tkinter tabanlı arayüz ile projeler ve malzeme listeleri yönetilir; Excel/CSV içe/dışa aktarım, çoklu seçim ve panoya kopyalama desteklenir. Veriler JSON olarak saklanır.
-
-### Özellikler
-- Proje ve malzeme CRUD
-- Filtreleme (Müşteri, Proje No, FAT tarih aralığı, genel arama)
-- Excel/CSV rapor dışa aktarımı ve Excel’den içe aktarım
-- Çoklu seçim ile panoya kopyalama (opsiyonel `pyperclip`)
-- Oturum ayarları (sütun genişlikleri, tema için altyapı)
-- JSON veri kaydetme/yükleme
+Bu depo, Binance USDT-M Futures üzerinde risk-ayarlı getiri odaklı bir sistemin modüler mimarisini içerir. Kart A (Symbol Meta & Data Core) tamamlanmıştır: REST istemci, cache, OHLCV/funding veri çekimi ve veri hijyeni araçları.
 
 ### Kurulum
+
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Çalıştırma
+### Hızlı Başlangıç
+
+Örnek sembol meta ve OHLCV veri çekimi:
+
 ```bash
-python app.py
+python scripts/bootstrap_data.py --symbols BTCUSDT ETHUSDT --interval 15m --days 7
 ```
 
-Excel desteği için `pandas` ve `openpyxl` kurulu olmalıdır (requirements içerir). Panoya kopyalama için `pyperclip` önerilir.
+API anahtarı gerekmez (public endpointler). Kaldıraç/maintenance tier verisi için `.env` ile anahtarlar verilebilir.
 
-### Proje Yapısı
-```
-app.py                  # giriş noktası
-malzeme/
-  __init__.py          # sabitler ve meta
-  models.py            # Project / Material modelleri
-  storage.py           # JSON/Excel depolama
-  controller.py        # iş mantığı / filtreleme
-  ui.py                # Tkinter arayüzü
-```
+### Yapı (şimdilik)
+- `src/quant_futures/data`
+- `src/quant_futures/utils`
+- `scripts/bootstrap_data.py`
 
-### Notlar
-- Uygulama kapanırken veriler `data.json` dosyasına kaydedilir.
-- Sütun genişlikleri `settings.json` içinde saklanır.
+Kartlar: A→I sırasıyla genişleyecek.
