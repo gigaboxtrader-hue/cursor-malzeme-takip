@@ -1,40 +1,40 @@
-## Malzeme Takip Sistemi
+### Binance USDT-M Futures Strategy Engine
 
-Modern, modüler ve genişletilebilir bir masaüstü uygulaması. Tkinter tabanlı arayüz ile projeler ve malzeme listeleri yönetilir; Excel/CSV içe/dışa aktarım, çoklu seçim ve panoya kopyalama desteklenir. Veriler JSON olarak saklanır.
+This repository implements a risk-first, liquidation-averse strategy framework for Binance USDT-M futures with dynamic leverage, realistic event-driven backtesting, walk-forward validation, and deployment scaffolding.
 
-### Özellikler
-- Proje ve malzeme CRUD
-- Filtreleme (Müşteri, Proje No, FAT tarih aralığı, genel arama)
-- Excel/CSV rapor dışa aktarımı ve Excel’den içe aktarım
-- Çoklu seçim ile panoya kopyalama (opsiyonel `pyperclip`)
-- Oturum ayarları (sütun genişlikleri, tema için altyapı)
-- JSON veri kaydetme/yükleme
+#### Key Principles
+- Avoid liquidation: enforce liquidation buffer and protective SL always-on
+- Dynamic leverage sizing based on volatility, liquidity class, and drawdown history
+- Realistic backtests: fees, slippage, funding, partial fills, and latency modeled
+- Portfolio limits: per-trade risk ≤ 1%, total concurrent risk ≤ 3% (configurable)
 
-### Kurulum
+#### Quick Start
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+python -m engine.cli backtest --config config/default.yaml --symbol BTCUSDT --timeframe 15m --start 2023-01-01 --end 2023-06-30
 ```
 
-### Çalıştırma
-```bash
-python app.py
+#### Project Structure
+```text
+engine/
+  backtest/      # Event-driven simulator (fills, slippage, fees, funding)
+  data/          # Data access & caching (OHLCV, funding, meta)
+  exchange/      # Binance REST/WS wrappers (meta, brackets, depth)
+  execution/     # Live/paper order routing (OCO emulation)
+  monitoring/    # Dashboard & alerts
+  optimizer/     # Grid/Random/Bayesian search, walk-forward
+  portfolio/     # Portfolio risk budgeting
+  risk/          # Position sizing, dynamic leverage, liquidation buffer
+  universe/      # Universe filter by volume/spread/depth
+  utils/         # Indicators, timeframes, math helpers
+config/
+  default.yaml   # Global settings and policy thresholds
 ```
 
-Excel desteği için `pandas` ve `openpyxl` kurulu olmalıdır (requirements içerir). Panoya kopyalama için `pyperclip` önerilir.
+#### Safety
+- Kill-switches for daily DD, feed divergence, order rejections
+- Liquidation buffer verified pre-trade using leverage brackets and ATR buffers
 
-### Proje Yapısı
-```
-app.py                  # giriş noktası
-malzeme/
-  __init__.py          # sabitler ve meta
-  models.py            # Project / Material modelleri
-  storage.py           # JSON/Excel depolama
-  controller.py        # iş mantığı / filtreleme
-  ui.py                # Tkinter arayüzü
-```
-
-### Notlar
-- Uygulama kapanırken veriler `data.json` dosyasına kaydedilir.
-- Sütun genişlikleri `settings.json` içinde saklanır.
+#### License
+MIT

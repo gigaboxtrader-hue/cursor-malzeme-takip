@@ -1,0 +1,62 @@
+app:
+  mode: backtest  # backtest | paper | live
+  log_level: INFO
+  data_dir: data
+
+exchange:
+  name: binance_um
+  base_url: https://fapi.binance.com
+  ws_url: wss://fstream.binance.com
+  maker_fee_bps: 1.8   # 0.018%
+  taker_fee_bps: 3.6   # 0.036%
+
+risk:
+  per_trade_risk_pct: 0.0075  # 0.75%
+  portfolio_risk_cap_pct: 0.03 # 3%
+  liquidation_buffer_atr_mult: 4.0  # Z in spec
+  liquidation_buffer_pct: 0.02      # 2%
+  sl_atr_mult: 1.25
+  rr_min: 1.6
+  trailing_atr_mult: 2.0
+  use_isolated_margin: true
+
+leverage_policy:
+  class_caps:
+    A: 12
+    B: 5
+    C: 2
+  regime_adjustments:
+    trend_low_vol: 1.0
+    trend_high_vol: 0.7
+    range_low_vol: 0.8
+    range_high_vol: 0.4
+
+universe:
+  whitelist: [BTCUSDT, ETHUSDT]
+  min_notional_30d_usdt: 50000000
+  min_notional_90d_usdt: 100000000
+  max_spread_bps: 2.5
+  min_top_of_book_usdt: 200000
+
+backtest:
+  timeframe: 15m
+  initial_equity_usdt: 10000
+  lat_ms_mean: 75
+  lat_ms_jitter: 35
+  slippage_mode: hybrid  # none | deterministic | stochastic | hybrid
+  trigger_price: mark    # mark | last
+  funding_enabled: true
+  fees_enabled: true
+  partial_fills: true
+
+optimizer:
+  sharpe_mdd_penalty: {alpha: 1.0, beta: 0.5}
+  random_trials: 50
+  walkforward:
+    train_months: 4
+    test_months: 2
+    step_months: 1
+
+alerts:
+  telegram_token: null
+  telegram_chat_id: null
